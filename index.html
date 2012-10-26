@@ -1,0 +1,156 @@
+<!doctype html>  
+<html lang="en">  
+<head>  
+  <meta charset="utf-8">  
+  <title>Spectrum</title>  
+  <meta name="description" content="The HTML5 Herald">  
+  <meta name="author" content="DogDigital">  
+  <style type="text/css">
+  	*
+  	{
+  		padding: 0;
+  		margin: 0;
+  	}
+
+	html
+	{
+		font-family: helvetica, arial, sans-serif;
+		font-size: 14px;
+		color: #333;
+		background-color: #eee;
+		text-shadow: 1px 1px 1px #fff;
+		padding: 10px;
+	}
+
+	dl
+	{
+		padding-top: 20px;
+	}
+
+	dt
+	{
+		margin-bottom: 10px;
+	}
+
+	input
+	{
+		width: 120px;
+		margin-bottom: 10px;
+	}
+
+	label
+	{
+		display: block;
+    	float: left;
+    	width: 120px;
+	}
+
+	#hexinputErrorOutput
+	{
+		padding-left: 20px;
+	}
+
+	h1
+	{
+		font-weight: normal;
+		font-size: 32px;
+	}
+
+	h2
+	{
+		font-weight: normal;
+		font-size: 18px;
+		margin-bottom: 20px;
+	}
+
+	</style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <!--[if lt IE 9]>  
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>  
+  <![endif]-->
+  <script type="text/javascript">
+		function getIdRef(id)
+		{
+			return eval($('#' + id).attr('id'));
+		}
+		
+		function init()
+		{
+			resetHexInputError();
+
+			$("#hexinput").change(function()
+			{
+				var cleanHex = stripInput($(this).val());
+				var rgbObj = hexToRgbObj(cleanHex);
+
+				if(rgbObj != null)
+				{
+					var xcodeOutputStr = generateXcodeOutput(rgbObj);
+					$("#xcodeOutput").html(xcodeOutputStr);
+					$("#cleanHexOutput").html(cleanHex);
+					$("#cleanHexOutputColour").css("background-color","#" + cleanHex);
+
+					resetHexInputError();
+
+				}
+					else
+				{
+					$("#hexinputErrorOutput").html("Number out of bounds");
+					$("#cleanHexOutput").html("&nbsp;");
+				}
+				
+			});
+
+			//$('#hexinput').focus();
+		}
+
+		function resetHexInputError()
+		{
+			$("#hexinputErrorOutput").html("e.g #c0ffee");
+		}
+
+		function hexToRgbObj(hex)
+		{
+		    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		    return result ? {
+		        r: parseInt(result[1], 16),
+		        g: parseInt(result[2], 16),
+		        b: parseInt(result[3], 16)
+		    } : null;
+		}
+
+		function generateXcodeOutput(rgbObj)
+		{
+			return "[[UIColor alloc] initWithRed:" + rgbObj.r/255 + "f green:" + rgbObj.g/255 + "f blue:" + rgbObj.b/255 + "f alpha:1f];";
+		}
+
+		function stripInput(input)
+		{
+			return input.substring(input.length - 6);
+		}
+
+		window.log = function()
+		{
+		  log.history = log.history || [];   // store logs to an array for reference
+		  log.history.push(arguments);
+		  if(this.console)
+		  {
+				console.log( Array.prototype.slice.call(arguments));
+		  }
+		};
+	</script>
+</head>  
+<body>
+	<script>$(document).ready(function(){init();});</script>
+	<h1>Spectrum</h1>
+	<h2>Converts HEX into other colour formats</h2>
+	<div><label for="hexinput">Input HEX</label><input id="hexinput" type="text" value=""><span id="hexinputErrorOutput"></span></div>
+	<div><label for="cleanHexOutputColour" id="cleanHexOutput">&nbsp;</label><input id="cleanHexOutputColour" type="text" value="" disabled="disabled"></div>
+	<div>
+		<dl>
+			<dt>XCode</dt>
+			<dd id="xcodeOutput">&nbsp;</dd>
+		</dl>
+	</div>
+	</body>  
+</html>
