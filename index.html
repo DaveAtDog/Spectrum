@@ -29,6 +29,7 @@
 
 	dt
 	{
+		font-weight: bold;
 		margin-bottom: 10px;
 	}
 
@@ -36,6 +37,11 @@
 	{
 		width: 120px;
 		margin-bottom: 10px;
+	}
+
+	dd{
+		margin-bottom: 10px;
+		
 	}
 
 	label
@@ -85,8 +91,8 @@
 
 				if(rgbObj != null)
 				{
-					var xcodeOutputStr = generateXcodeOutput(rgbObj);
-					$("#xcodeOutput").html(xcodeOutputStr);
+					$("#xcodeOutput").html(generateXcodeOutput(rgbObj));
+					$("#cssRGBAOutput").html(generateCSSRGBAOutput(rgbObj));
 					$("#cleanHexOutput").html(cleanHex);
 					$("#cleanHexOutputColour").css("background-color","#" + cleanHex);
 
@@ -97,11 +103,10 @@
 				{
 					$("#hexinputErrorOutput").html("Number out of bounds");
 					$("#cleanHexOutput").html("&nbsp;");
+					$("#cleanHexOutputColour").css("background-color","#ffffff");
 				}
 				
 			});
-
-			//$('#hexinput').focus();
 		}
 
 		function resetHexInputError()
@@ -122,6 +127,11 @@
 		function generateXcodeOutput(rgbObj)
 		{
 			return "[[UIColor alloc] initWithRed:" + rgbObj.r/255 + "f green:" + rgbObj.g/255 + "f blue:" + rgbObj.b/255 + "f alpha:1f];";
+		}
+
+		function generateCSSRGBAOutput(rgbObj)
+		{
+			return "background: rgba(" + rgbObj.r + ", " + rgbObj.g + ", " + rgbObj.b + ", 1);";
 		}
 
 		function stripInput(input)
@@ -148,7 +158,9 @@
 	<div><label for="cleanHexOutputColour" id="cleanHexOutput">&nbsp;</label><input id="cleanHexOutputColour" type="text" value="" disabled="disabled"></div>
 	<div>
 		<dl>
-			<dt>XCode</dt>
+			<dt>CSS RGBA</dt>
+			<dd id="cssRGBAOutput">&nbsp;</dd>
+			<dt>XCode UIColor RGBA Object</dt>
 			<dd id="xcodeOutput">&nbsp;</dd>
 		</dl>
 	</div>
